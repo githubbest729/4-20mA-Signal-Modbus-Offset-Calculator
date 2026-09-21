@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { Gauge, ArrowRightLeft } from 'lucide-react'
+import { Gauge, ArrowRightLeft, RotateCcw } from 'lucide-react'
+import CopyButton from './CopyButton.jsx'
 
 const PRESETS = [
   { label: '4-20mA', rawMin: 4, rawMax: 20 },
@@ -15,13 +16,19 @@ function toNumber(v) {
   return Number.isFinite(n) ? n : null
 }
 
-function Field({ label, value, onChange, suffix, step = 'any' }) {
+function Field({ label, value, onChange, suffix, step = 'any', error = false }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink-faint">
         {label}
       </span>
-      <div className="flex items-center rounded-md border border-panel-border bg-panel-inset shadow-inset focus-within:border-trace/60">
+      <div
+        className={`flex items-center rounded-md border bg-panel-inset shadow-inset ${
+          error
+            ? 'border-alarm/70 focus-within:border-alarm'
+            : 'border-panel-border focus-within:border-trace/60'
+        }`}
+      >
         <input
           type="number"
           inputMode="decimal"
@@ -92,6 +99,17 @@ export default function ScalingCalculator() {
     setRawMax(String(p.rawMax))
   }
 
+  const resetAll = () => {
+    setRawMin('4')
+    setRawMax('20')
+    setScaledMin('0')
+    setScaledMax('100')
+    setUnit('%')
+    setRawInput('12')
+    setScaledInput('')
+    setLastEdited('raw')
+  }
+
   const displayValue = lastEdited === 'raw' ? scaledResult : rawResult
 
   return (
@@ -108,21 +126,29 @@ export default function ScalingCalculator() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {PRESETS.map((p) => (
-          <button
-            key={p.label}
-            onClick={() => applyPreset(p)}
-            className="rounded-full border border-panel-border bg-panel-raised px-3 py-1 font-mono text-xs text-ink-muted transition-colors hover:border-amber/50 hover:text-amber"
-          >
-            {p.label}
-          </button>
-        ))}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap gap-2">
+          {PRESETS.map((p) => (
+            <button
+              key={p.label}
+              onClick={() => applyPreset(p)}
+              className="rounded-full border border-panel-border bg-panel-raised px-3 py-1 font-mono text-xs text-ink-muted transition-colors hover:border-amber/50 hover:text-amber"
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={resetAll}
+          className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-panel-border px-2.5 py-1 text-xs text-ink-faint transition-colors hover:border-alarm/40 hover:text-alarm"
+        >
+          <RotateCcw size={12} /> Clear all
+        </button>
       </div>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Field label="Raw min" value={rawMin} onChange={setRawMin} />
-        <Field label="Raw max" value={rawMax} onChange={setRawMax} />
+        <Field label="Raw min" value={rawMin} onChange={setRawMin} error={!validRange} />
+        <Field label="Raw max" value={rawMax} onChange={setRawMax} error={!validRange} />
         <Field label="Scaled min" value={scaledMin} onChange={setScaledMin} />
         <Field label="Scaled max" value={scaledMax} onChange={setScaledMax} />
       </div>
@@ -141,7 +167,9 @@ export default function ScalingCalculator() {
       </label>
 
       {!validRange && (
-        <p className="text-sm text-alarm">Raw min and raw max can't be equal — set a real span.</p>
+        <p className="text-xs text-ink-faint">
+          Fields with a red border below need attention before results can be calculated.
+        </p>
       )}
 
       <div className="grid gap-4 sm:grid-cols-[1fr_auto_1fr] sm:items-end">
@@ -166,17 +194,27 @@ export default function ScalingCalculator() {
         />
       </div>
 
-      <div className="rounded-lg border border-panel-border bg-panel-inset p-5 shadow-inset">
+      <div
+        className={`rounded-lg border p-5 shadow-inset ${
+          !validRange ? 'border-alarm/60 bg-alarm/5' : 'border-panel-border bg-panel-inset'
+        }`}
+      >
         <div className="text-xs font-medium uppercase tracking-wide text-ink-faint">
           {lastEdited === 'raw' ? 'Scaled result' : 'Raw signal required'}
         </div>
         {validRange && displayValue !== null && !Number.isNaN(displayValue) ? (
           <>
-            <div className="mt-1 font-mono text-4xl font-semibold tabular text-trace">
-              {displayValue.toFixed(4).replace(/\.?0+$/, '') || '0'}
-              <span className="ml-2 text-lg text-ink-muted">
-                {lastEdited === 'raw' ? unit || 'units' : ''}
+            <div className="mt-1 flex items-center gap-2 font-mono text-4xl font-semibold tabular text-trace">
+              <span>
+                {displayValue.toFixed(4).replace(/\.?0+$/, '') || '0'}
+                <span className="ml-2 text-lg text-ink-muted">
+                  {lastEdited === 'raw' ? unit || 'units' : ''}
+                </span>
               </span>
+              <CopyButton
+                value={displayValue.toFixed(4).replace(/\.?0+$/, '') || '0'}
+                label="Copy result"
+              />
             </div>
             {percentOfRange !== null && (
               <div className="mt-3">
@@ -198,6 +236,10 @@ export default function ScalingCalculator() {
               </div>
             )}
           </>
+        ) : !validRange ? (
+          <div className="mt-1 font-mono text-lg text-alarm">
+            Can't divide by a zero span — fix raw min/max above.
+          </div>
         ) : (
           <div className="mt-1 font-mono text-2xl text-ink-faint">—</div>
         )}

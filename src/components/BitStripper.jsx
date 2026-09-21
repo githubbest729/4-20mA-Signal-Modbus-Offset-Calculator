@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Binary, RotateCcw } from 'lucide-react'
+import CopyButton from './CopyButton.jsx'
 
 const STORAGE_KEY = 'bitstripper-labels-v1'
 const DEFAULT_LABELS = Array.from({ length: 16 }, (_, i) => `Bit ${i}`)
@@ -101,17 +102,20 @@ export default function BitStripper() {
       {!invalid && value !== null && (
         <>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-lg border border-panel-border bg-panel-inset p-4 font-mono text-sm shadow-inset">
-            <div>
+            <div className="flex items-center gap-1">
               <span className="text-ink-faint">DEC </span>
               <span className="tabular text-trace">{value}</span>
+              <CopyButton value={value} label="Copy decimal value" />
             </div>
-            <div>
+            <div className="flex items-center gap-1">
               <span className="text-ink-faint">HEX </span>
               <span className="tabular text-trace">0x{value.toString(16).toUpperCase().padStart(4, '0')}</span>
+              <CopyButton value={`0x${value.toString(16).toUpperCase().padStart(4, '0')}`} label="Copy hex value" />
             </div>
-            <div>
+            <div className="flex items-center gap-1">
               <span className="text-ink-faint">BIN </span>
               <span className="tabular text-trace">{value.toString(2).padStart(16, '0')}</span>
+              <CopyButton value={value.toString(2).padStart(16, '0')} label="Copy binary value" />
             </div>
             <div className="ml-auto text-ink-faint">
               {activeCount} of 16 bits active
@@ -141,7 +145,7 @@ export default function BitStripper() {
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs text-ink-faint">Bit {index}</span>
+                  <span className="font-mono text-xs text-ink-muted">Bit {index}</span>
                   <span
                     className={`h-2.5 w-2.5 rounded-full ${
                       active ? 'bg-ok animate-blink' : 'bg-panel-border'
@@ -154,11 +158,11 @@ export default function BitStripper() {
                   value={labels[index]}
                   onChange={(e) => updateLabel(index, e.target.value)}
                   className={`mt-1.5 w-full truncate bg-transparent text-sm font-medium outline-none ${
-                    active ? 'text-ok' : 'text-ink-muted'
+                    active ? 'text-ok' : 'text-ink'
                   }`}
                 />
                 <div
-                  className={`mt-1 font-mono text-[11px] ${active ? 'text-ok/80' : 'text-ink-faint'}`}
+                  className={`mt-1 font-mono text-[11px] ${active ? 'text-ok/80' : 'text-ink-muted'}`}
                 >
                   {active ? 'SET (1)' : 'clear (0)'}
                 </div>

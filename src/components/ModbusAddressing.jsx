@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ArrowLeftRight } from 'lucide-react'
+import CopyButton from './CopyButton.jsx'
 
 const REGISTER_TYPES = [
   { key: 'coil', label: 'Coil', base: 1, prefix: 0, code: '0x / 1, 5, 15' },
@@ -123,17 +124,19 @@ export default function ModbusAddressing() {
           {lastEdited === 'offset' ? 'Base-1 address' : 'Zero-based offset'}
         </div>
         {lastEdited === 'offset' && computedAddress !== null && (
-          <div className="mt-1 font-mono text-4xl font-semibold tabular text-trace">
-            {computedAddress}
+          <div className="mt-1 flex items-center gap-2 font-mono text-4xl font-semibold tabular text-trace">
+            <span>{computedAddress}</span>
+            <CopyButton value={computedAddress} label="Copy address" />
           </div>
         )}
         {lastEdited === 'address' && computedOffset !== null && (
           <div
-            className={`mt-1 font-mono text-4xl font-semibold tabular ${
+            className={`mt-1 flex items-center gap-2 font-mono text-4xl font-semibold tabular ${
               negativeOffsetWarning ? 'text-alarm' : 'text-trace'
             }`}
           >
-            {computedOffset}
+            <span>{computedOffset}</span>
+            <CopyButton value={computedOffset} label="Copy offset" />
           </div>
         )}
         {computedAddress === null && computedOffset === null && (

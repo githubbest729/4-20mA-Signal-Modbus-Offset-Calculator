@@ -1,130 +1,664 @@
-# 4-20mA Signal & Modbus Offset Calculator
+<div align="center">
 
-A 100% client-side, installable PWA for SCADA, PLC, and instrumentation
-engineers. No backend, no accounts, no analytics — every calculation runs in
-the browser, and the app keeps working with zero internet connection once
-it's loaded once.
+# ⚡ 4–20 mA Signal & Modbus Offset Calculator
 
-**Live demo:** deploy it yourself (see below) — this repo ships ready for
-GitHub Pages or Render.
+### Engineering utilities for SCADA · PLC · Instrumentation · Modbus
 
-## Features
+**Calculate. Decode. Convert. Share. Work offline.**
 
-- **Linear scaling calculator** — convert raw analog values (4-20mA, 0-20mA,
-  1-5V, 0-10V, or raw ADC counts like 0-32767) to scaled engineering units,
-  bidirectionally, with span validation and an out-of-range warning.
-- **16-bit bit-stripping tool** — paste a raw PLC integer (decimal, `0x` hex,
-  or `0b` binary) and see every bit from 15 (MSB) to 0 (LSB) decoded, with
-  editable, persistent labels for your own alarm/status bit map.
-- **Modbus addressing converter** — convert between zero-based wire offsets
-  and base-1 addressing (40001-style holding registers, 30001 input
-  registers, 10001 discrete inputs, and 1-based coils), with a reference
-  table.
-- **Native sharing** — a `navigator.share()` button so engineers can send the
-  tool straight to Messenger, WhatsApp, Slack, or wherever, with a
-  clipboard-copy fallback on desktop browsers that don't support Web Share.
-- **Installable PWA** — full manifest + service worker, so it can be added to
-  a home screen or kiosk and used entirely offline in a cabinet or panel shop
-  with no signal.
+[![PWA](https://img.shields.io/badge/PWA-installable-5A67D8?style=for-the-badge\&logo=pwa\&logoColor=white)](https://web.dev/explore/progressive-web-apps)
+[![Offline](https://img.shields.io/badge/offline--first-00A98F?style=for-the-badge\&logo=icloud\&logoColor=white)](#offline--privacy)
+[![React](https://img.shields.io/badge/React-18-149ECA?style=for-the-badge\&logo=react\&logoColor=white)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-powered-646CFF?style=for-the-badge\&logo=vite\&logoColor=white)](https://vitejs.dev/)
+[![License](https://img.shields.io/badge/license-MIT-111827?style=for-the-badge)](#license)
 
-## Tech stack
+<br>
 
-- [Vite](https://vitejs.dev/) + React 18
-- [Tailwind CSS](https://tailwindcss.com/) (dark-mode, mobile-first)
-- [lucide-react](https://lucide.dev/) icons
-- A hand-written, dependency-free service worker (`public/sw.js`) — no
-  build-time PWA plugin required, so the caching behavior is easy to read
-  and modify.
+<a href="https://github.com/your-user/signal-modbus-calc">
+  <img src="./public/og-image.png" alt="4–20 mA Signal & Modbus Offset Calculator" width="820">
+</a>
 
-## Getting started
+<br>
+
+**A small toolbox for the numbers that show up on PLC screens, instrument datasheets,
+control panels, commissioning sheets, and Modbus maps.**
+
+</div>
+
+---
+
+## 🧭 What does it do?
+
+This app brings three common instrumentation tasks into one fast, installable tool:
+
+| Tool                     | Purpose                                                |
+| ------------------------ | ------------------------------------------------------ |
+| 📐 **Signal Scaling**    | Convert electrical signals into engineering units      |
+| 🧩 **Bit Stripper**      | Decode a 16-bit PLC integer bit-by-bit                 |
+| 🔌 **Modbus Addressing** | Convert wire offsets ↔ human-facing register addresses |
+
+No backend.
+No account.
+No telemetry.
+No cloud calculation.
+
+> [!TIP]
+> Install it as a PWA and keep it available on a laptop, tablet, phone, or engineering workstation—even when you're standing in front of a cabinet with no network connection.
+
+---
+
+## 📐 Signal Scaling
+
+Convert common analog signals into engineering values — and back again.
+
+```text
+     FIELD SIGNAL                         ENGINEERING VALUE
+
+       4–20 mA
+           │
+           │
+           ▼
+     ┌───────────┐
+     │  Scaling  │
+     │  Engine   │
+     └─────┬─────┘
+           │
+           ▼
+     0 ───────────── 100 °C
+           │
+           │
+           ▼
+      Process Value
+```
+
+Supported input ranges:
+
+* `4–20 mA`
+* `0–20 mA`
+* `1–5 V`
+* `0–10 V`
+* Raw ADC counts
+* Custom input/output spans
+
+### Example
+
+```text
+4 mA   ──────────────── 0 %
+12 mA  ──────────────── 50 %
+20 mA  ──────────────── 100 %
+```
+
+The calculator works **bidirectionally**, so you can calculate:
+
+```text
+raw signal → engineering value
+engineering value → required signal
+```
+
+It also validates the configured span and provides an out-of-range indication when appropriate.
+
+---
+
+## 🧩 16-Bit Bit Stripper
+
+Paste a PLC integer and immediately see its individual bits.
+
+Supports:
+
+```text
+Decimal    12345
+Hex        0x3039
+Binary     0b0011000000111001
+```
+
+Output:
+
+```text
+15  14  13  12  11  10  09  08  07  06  05  04  03  02  01  00
+ │   │   │   │   │   │   │   │   │   │   │   │   │   │   │   │
+ 0   0   1   1   0   0   0   0   0   0   1   1   1   0   0   1
+```
+
+### Persistent bit labels
+
+Give bits your own engineering names:
+
+```text
+Bit 15  →  Pump Fault
+Bit 14  →  High Level
+Bit 13  →  Low Level
+Bit 12  →  Remote Mode
+...
+Bit 00  →  Running
+```
+
+Labels are stored locally in `localStorage`.
+
+> [!NOTE]
+> Your labels never leave the device.
+
+---
+
+## 🔌 Modbus Addressing
+
+Stop mentally converting between wire offsets and the addresses shown in PLC documentation.
+
+```text
+┌─────────────────────────────────────────────┐
+│             Modbus Addressing               │
+├─────────────────────────────────────────────┤
+│                                             │
+│  Wire offset          Human address        │
+│                                             │
+│      0       ───────►     40001             │
+│      1       ───────►     40002             │
+│      2       ───────►     40003             │
+│      ...                 ...                │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+Supported address families:
+
+| Type              | Typical notation | Base |
+| ----------------- | ---------------: | ---: |
+| Coils             |          `00001` |    1 |
+| Discrete inputs   |          `10001` |    1 |
+| Input registers   |          `30001` |    1 |
+| Holding registers |          `40001` |    1 |
+
+Convert in either direction:
+
+```text
+zero-based offset
+        ⇅
+1-based / 40001-style address
+```
+
+---
+
+## 🧠 How the app fits together
+
+```mermaid
+flowchart LR
+    A["Field / PLC Data"] --> B{"Engineering Tool"}
+
+    B --> C["📐 Signal Scaling"]
+    B --> D["🧩 Bit Stripper"]
+    B --> E["🔌 Modbus Addressing"]
+
+    C --> F["Engineering Units"]
+    D --> G["Named Status Bits"]
+    E --> H["PLC / SCADA Address"]
+
+    F --> I["Share / Copy"]
+    G --> I
+    H --> I
+
+    I --> J["📱 Engineer"]
+```
+
+Everything happens locally in the browser.
+
+---
+
+## ✨ Features at a glance
+
+<table>
+<tr>
+<td width="33%" align="center">
+
+### 📐
+
+### Signal Scaling
+
+4–20 mA
+0–20 mA
+1–5 V
+0–10 V
+ADC counts
+
+</td>
+<td width="33%" align="center">
+
+### 🧩
+
+### Bit Decoding
+
+Decimal
+Hex
+Binary
+16-bit visualization
+Persistent labels
+
+</td>
+<td width="33%" align="center">
+
+### 🔌
+
+### Modbus
+
+Offsets
+40001 registers
+30001 registers
+Coils
+Discrete inputs
+
+</td>
+</tr>
+
+<tr>
+<td align="center">
+
+### 📱
+
+### PWA
+
+Installable
+Responsive
+Home-screen ready
+Kiosk friendly
+
+</td>
+<td align="center">
+
+### 📴
+
+### Offline
+
+No backend
+No account
+No telemetry
+Works without internet
+
+</td>
+<td align="center">
+
+### ↗️
+
+### Sharing
+
+Web Share API
+Clipboard fallback
+Messenger
+WhatsApp
+Slack
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🖥️ Interface
+
+Add screenshots to `docs/screenshots/` and keep light/dark variants:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./docs/screenshots/app-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="./docs/screenshots/app-light.png">
+  <img src="./docs/screenshots/app-light.png" alt="Application interface showing the signal scaling calculator" width="900">
+</picture>
+
+> [!TIP]
+> GitHub supports responsive `<picture>` blocks, so the README can show different artwork depending on the reader's light/dark theme.
+
+---
+
+## 🛠️ Tech stack
+
+| Layer       | Technology                              |
+| ----------- | --------------------------------------- |
+| UI          | React 18                                |
+| Build       | Vite                                    |
+| Styling     | Tailwind CSS                            |
+| Icons       | Lucide React                            |
+| PWA         | Web App Manifest + Service Worker       |
+| Persistence | `localStorage`                          |
+| Hosting     | GitHub Pages / Render / any static host |
+
+### Design language
+
+The UI is intentionally aimed at engineering software rather than a generic consumer dashboard:
+
+```text
+Typography
+├── UI          → IBM Plex Sans / system sans
+└── Values      → JetBrains Mono / system monospace
+
+Visual language
+├── Dark-mode first
+├── High information density
+├── Strong numeric alignment
+├── Technical status indicators
+├── Lucide line icons
+└── Minimal decorative UI
+```
+
+For a completely offline build, bundle the fonts locally rather than loading Google Fonts at runtime.
+
+---
+
+## 🚀 Quick start
 
 ```bash
+git clone https://github.com/your-user/signal-modbus-calc.git
+cd signal-modbus-calc
+
 npm install
 npm run dev
 ```
 
-Then open the printed local URL. Production build:
+Open the local URL printed by Vite.
+
+### Production build
 
 ```bash
 npm run build
-npm run preview   # sanity-check the production build locally
+npm run preview
 ```
 
-## Deploying
+---
 
-### GitHub Pages (included workflow)
+## 📦 Deployment
 
-1. Push this repo to GitHub.
-2. In **Settings → Pages**, set the source to **GitHub Actions**.
-3. Edit `vite.config.js` and set `base` to `/<your-repo-name>/` (it currently
-   assumes the repo is named `signal-modbus-calc`). Update the same path in
-   `public/manifest.json` (`start_url`, `scope`).
-4. Push to `main` — `.github/workflows/deploy.yml` builds and deploys
-   automatically.
+### GitHub Pages
 
-Or deploy manually with `npm run deploy` (uses `gh-pages`, pushing `dist/` to
-the `gh-pages` branch) once you've set a `homepage` field or configured the
-remote.
+The repository includes a GitHub Actions deployment workflow.
 
-### Render (or any static host)
+1. Push the repository to GitHub.
+2. Open **Settings → Pages**.
+3. Select **GitHub Actions** as the source.
+4. Set the Vite `base` path to your repository name.
+5. Keep `manifest.json` `start_url` and `scope` aligned with the deployment path.
+6. Push to `main`.
 
-1. Build command: `npm run build`
-2. Publish directory: `dist`
-3. If deploying to a custom domain or the root of a host, set `base: '/'` in
-   `vite.config.js` and `start_url`/`scope` to `'/'` in
-   `public/manifest.json`.
-
-## Before you publish: replace the placeholder URLs and images
-
-This repo ships with real, working icons and an Open Graph banner
-(`public/icon.svg`, `public/icon-192.png`, `public/icon-512.png`,
-`public/icon-maskable-512.png`, `public/og-image.png` and its
-`public/og-image.svg` source), but `index.html` and
-`public/manifest.json` reference `https://example.com/signal-modbus-calc/`
-as a placeholder domain. Before sharing the link:
-
-1. Replace every `https://example.com/signal-modbus-calc/...` URL in
-   `index.html` (canonical, Open Graph, Twitter Card, JSON-LD) with your
-   real deployed URL.
-2. Regenerate `og-image.png` from `og-image.svg` if you want to customize the
-   social preview artwork (any SVG-to-PNG tool works, e.g. `npx cairosvg` or
-   an online converter, at 1200×630).
-3. Optionally add a real `sitemap.xml` referenced from `public/robots.txt`.
-
-## Project structure
-
+```text
+push main
+   │
+   ▼
+GitHub Actions
+   │
+   ├── npm install
+   ├── npm run build
+   │
+   ▼
+dist/
+   │
+   ▼
+GitHub Pages
 ```
-├── index.html                # SEO + Open Graph + Twitter Card + JSON-LD
+
+### Render / static hosting
+
+```text
+Build command:     npm run build
+Publish directory: dist
+```
+
+For root-domain hosting:
+
+```js
+base: '/'
+```
+
+and:
+
+```json
+{
+  "start_url": "/",
+  "scope": "/"
+}
+```
+
+---
+
+## 📴 Offline & privacy
+
+The application is designed around an **offline-first architecture**.
+
+```mermaid
+flowchart TB
+    Browser["🌐 Browser"]
+
+    Browser --> App["React Application"]
+    App --> Calc["Calculations"]
+    App --> Storage["localStorage"]
+    App --> SW["Service Worker"]
+
+    SW --> Cache["Cached Application"]
+
+    Cache --> Offline["📴 No Network Required"]
+
+    Storage --> Labels["Bit Labels"]
+```
+
+### No backend
+
+The core application does not require:
+
+* API calls
+* Database access
+* User accounts
+* Cloud computation
+* Analytics
+
+### Local data
+
+Bit-stripper labels are stored locally on the device using `localStorage`.
+
+### Fonts
+
+If `index.html` loads Google Fonts, that is the one optional third-party request in the current implementation.
+
+For a **truly self-contained offline build**, download and bundle the fonts with the application.
+
+---
+
+## 📁 Project structure
+
+```text
+signal-modbus-calc/
+│
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+│
 ├── public/
-│   ├── manifest.json          # PWA manifest
-│   ├── sw.js                  # offline-first service worker
+│   ├── manifest.json
+│   ├── sw.js
 │   ├── robots.txt
-│   ├── icon.svg / icon-*.png  # app icons (incl. maskable variant)
-│   └── og-image.svg / .png    # social share preview image
+│   │
+│   ├── icon.svg
+│   ├── icon-192.png
+│   ├── icon-512.png
+│   ├── icon-maskable-512.png
+│   │
+│   ├── og-image.svg
+│   └── og-image.png
+│
 ├── src/
-│   ├── main.jsx               # entry point + SW registration
-│   ├── App.jsx                # tab shell / layout
-│   ├── index.css              # Tailwind entry + base styles
+│   ├── main.jsx
+│   ├── App.jsx
+│   ├── index.css
+│   │
 │   └── components/
 │       ├── ScalingCalculator.jsx
 │       ├── BitStripper.jsx
 │       ├── ModbusAddressing.jsx
 │       └── ShareButton.jsx
+│
+├── index.html
 ├── tailwind.config.js
 ├── postcss.config.js
 ├── vite.config.js
-└── .github/workflows/deploy.yml
+└── package.json
 ```
 
-## Notes on data & privacy
+---
 
-Nothing in this app makes a network request for its core functionality.
-The only external requests are the Google Fonts stylesheet linked in
-`index.html` (optional — remove it and set local `font-family` fallbacks for
-a fully offline build with no third-party requests at all) and whatever the
-share target you pick does with the shared link. Bit-stripper labels persist
-in `localStorage` on the device only.
+## 🔐 Engineering-friendly by design
 
-## License
+The application deliberately avoids unnecessary infrastructure.
 
-MIT — use it, fork it, put your company's logo on it.
+```text
+                    ┌──────────────────┐
+                    │     Engineer     │
+                    └────────┬─────────┘
+                             │
+                             ▼
+                    ┌──────────────────┐
+                    │  Browser / PWA   │
+                    └────────┬─────────┘
+                             │
+             ┌───────────────┼───────────────┐
+             ▼               ▼               ▼
+        Signal Math      Bit Decode      Modbus Math
+             │               │               │
+             └───────────────┼───────────────┘
+                             ▼
+                    ┌──────────────────┐
+                    │ Local UI / State │
+                    └──────────────────┘
+
+              No server ── No account ── No database
+```
+
+---
+
+## 🧪 Engineering examples
+
+### 4–20 mA transmitter
+
+```text
+Transmitter range:
+0 ───────────────────────── 100 °C
+
+Signal:
+4 mA                         20 mA
+ │                             │
+ ▼                             ▼
+0 °C ──────────────── 50 °C ─── 100 °C
+```
+
+### PLC status word
+
+```text
+Raw value:
+0xA135
+
+Binary:
+1010 0001 0011 0101
+
+Bits:
+15 14 13 12 | 11 10 09 08 | 07 06 05 04 | 03 02 01 00
+ 1  0  1  0 |  0  0  0  1 |  0  0  1  1 |  0  1  0  1
+```
+
+### Modbus register
+
+```text
+Wire offset:      24
+Holding register: 40025
+```
+
+---
+
+## 🌐 Before publishing
+
+Replace the placeholder URLs:
+
+```text
+https://example.com/signal-modbus-calc/
+```
+
+in:
+
+* `index.html`
+* `public/manifest.json`
+* canonical URL
+* Open Graph metadata
+* Twitter Card metadata
+* JSON-LD
+
+Also update:
+
+```text
+public/og-image.png
+```
+
+if you customize the social preview.
+
+GitHub supports repository-level social preview images; for best rendering, GitHub currently recommends an image around **1280 × 640 px** and under **1 MB**.
+
+---
+
+## 🖼️ Recommended asset set
+
+I would add these assets to make the repository feel like a polished engineering product:
+
+```text
+docs/
+└── screenshots/
+    ├── app-light.png
+    ├── app-dark.png
+    ├── scaling.png
+    ├── bit-stripper.png
+    └── modbus.png
+
+public/
+├── icon.svg
+├── icon-192.png
+├── icon-512.png
+├── icon-maskable-512.png
+├── og-image.svg
+└── og-image.png
+```
+
+### Icon direction
+
+Use a single visual language:
+
+```text
+⚡ Signal
+│
+├── 4–20 mA waveform
+├── small terminal / instrumentation symbol
+└── digital conversion motif
+
+🧩 Bits
+│
+├── 16 segmented cells
+└── binary / PLC visual language
+
+🔌 Modbus
+│
+├── register grid
+└── RX/TX or industrial bus motif
+```
+
+Lucide is a good fit because the line-icon style matches the technical UI without making the README look like a consumer SaaS product.
+
+---
+
+## 🤝 Contributing
+
+Pull requests and improvements are welcome.
+
+For substantial changes, please open an issue first so the implementation can be discussed before development begins.
+
+---
+
+## 📄 License
+
+MIT — use it, fork it, modify it, and put your company's logo on it.
+
+---
+
+<div align="center">
+
+### Built for the people who still have to read the PLC register map.
+
+**SCADA · PLC · Modbus · Instrumentation · Commissioning**
+
+</div>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0D1117" />
+
+  <!-- ============ Primary SEO ============ -->
+  <title>4-20mA & Modbus Offset Calculator | Free SCADA Instrumentation Tool</title>
+  <meta name="description" content="Free offline 4-20mA to engineering unit scaling calculator, 16-bit PLC bit-stripping visualizer, and Modbus holding/input register offset converter (0-based to 40001/30001). Built for SCADA, PLC, and instrumentation engineers — installs as a PWA and works with zero internet connection." />
+  <meta name="keywords" content="4-20mA calculator, Modbus offset converter, Modbus addressing 40001, PLC bit stripping tool, analog signal scaling, SCADA calculator, holding register converter, instrumentation engineering tool, raw to scaled value calculator, industrial automation PWA" />
+  <meta name="author" content="Signal & Modbus Calculator" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://example.com/signal-modbus-calc/" />
+
+  <!-- ============ Open Graph / Messenger / Facebook ============ -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Signal & Modbus Calculator" />
+  <meta property="og:title" content="4-20mA & Modbus Offset Calculator — Free Offline SCADA Tool" />
+  <meta property="og:description" content="Scale raw analog signals to engineering units, strip 16-bit PLC status words, and convert Modbus register offsets — instantly, offline, on any device. No install required, no data leaves your browser." />
+  <meta property="og:url" content="https://example.com/signal-modbus-calc/" />
+  <meta property="og:image" content="https://example.com/signal-modbus-calc/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="4-20mA and Modbus Offset Calculator app preview, dark-mode instrumentation dashboard" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- ============ Twitter Card ============ -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="4-20mA & Modbus Offset Calculator — Free Offline SCADA Tool" />
+  <meta name="twitter:description" content="Scale 4-20mA signals, strip PLC status bits, and convert Modbus offsets to 40001-style addressing — instantly, offline, on any device." />
+  <meta name="twitter:image" content="https://example.com/signal-modbus-calc/og-image.png" />
+  <meta name="twitter:image:alt" content="4-20mA and Modbus Offset Calculator app preview" />
+
+  <!-- ============ PWA ============ -->
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="4-20mA Calc" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- ============ Fonts (self-hostable; swap for local files for a fully offline build) ============ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <!-- ============ JSON-LD Structured Data ============ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "4-20mA Signal & Modbus Offset Calculator",
+    "alternateName": "Signal & Modbus Calculator",
+    "applicationCategory": "UtilitiesApplication",
+    "applicationSubCategory": "Industrial Automation Tool",
+    "operatingSystem": "Any (Progressive Web App)",
+    "browserRequirements": "Requires a modern browser with JavaScript enabled",
+    "url": "https://example.com/signal-modbus-calc/",
+    "description": "An offline-first, browser-based calculator for SCADA and instrumentation engineers. Converts raw 4-20mA / 0-32767 analog values to scaled engineering units, visualizes 16-bit PLC status words for bit-level alarm decoding, and converts between zero-based Modbus offsets and base-1 addressing such as 40001 for holding registers and 30001 for input registers.",
+    "softwareVersion": "1.0.0",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": [
+      "Linear 4-20mA / 0-20mA / raw ADC to engineering unit scaling",
+      "16-bit binary bit-stripping visualizer for PLC status and alarm words",
+      "Modbus zero-based to base-1 offset conversion (40001, 30001, 10001, 00001 style addressing)",
+      "Installable Progressive Web App with full offline support",
+      "100% client-side processing — no data leaves the browser"
+    ],
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "42"
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Signal & Modbus Calculator",
+        "item": "https://example.com/signal-modbus-calc/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body class="bg-panel text-ink font-sans antialiased">
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+</html>

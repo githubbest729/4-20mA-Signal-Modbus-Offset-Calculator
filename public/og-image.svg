@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#0D1117"/>
+  <rect x="0" y="0" width="1200" height="630" fill="none" stroke="#232B34" stroke-width="2"/>
+  <!-- faint grid, like an HMI trend background -->
+  <g stroke="#171D25" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+  </g>
+  <!-- gauge glyph -->
+  <circle cx="175" cy="315" r="90" fill="none" stroke="#232B34" stroke-width="10"/>
+  <path d="M175 315 L235 255" stroke="#F0A020" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="175" cy="315" r="13" fill="#F0A020"/>
+  <!-- signal trace -->
+  <path d="M330 400 h20 v-40 h20 v70 h20 v-120 h20 v150 h20 v-60 h20 v90 h20 v-30 h20"
+        fill="none" stroke="#39D2C0" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="60" y="120" font-family="'JetBrains Mono', monospace" font-size="26" fill="#8B96A3" letter-spacing="2">SCADA / INSTRUMENTATION TOOL</text>
+  <text x="60" y="500" font-family="Inter, sans-serif" font-size="54" font-weight="700" fill="#E6EDF3">4-20mA &amp; Modbus</text>
+  <text x="60" y="565" font-family="Inter, sans-serif" font-size="54" font-weight="700" fill="#E6EDF3">Offset Calculator</text>
+  <text x="700" y="565" font-family="'JetBrains Mono', monospace" font-size="22" fill="#586572">100% offline · installs as a PWA</text>
+</svg>

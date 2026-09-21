@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: #0D1117;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #232B34 #0D1117;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0D1117;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #232B34;
+    border-radius: 999px;
+  }
+
+  /* Visible keyboard focus everywhere — this is a field tool, not a marketing page */
+  :focus-visible {
+    outline: 2px solid #39D2C0;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}

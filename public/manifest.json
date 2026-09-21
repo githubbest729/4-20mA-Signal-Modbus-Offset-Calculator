@@ -1,0 +1,32 @@
+{
+  "name": "4-20mA Signal & Modbus Offset Calculator",
+  "short_name": "4-20mA Calc",
+  "description": "Offline calculator for 4-20mA scaling, 16-bit PLC bit-stripping, and Modbus offset addressing conversion.",
+  "start_url": "/signal-modbus-calc/",
+  "scope": "/signal-modbus-calc/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0D1117",
+  "theme_color": "#0D1117",
+  "categories": ["utilities", "productivity", "engineering"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

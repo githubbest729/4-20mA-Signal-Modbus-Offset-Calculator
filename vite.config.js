@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react'
 // or the root of a github.io user site, leave base as '/'.
 export default defineConfig({
   plugins: [react()],
-  base: '/signal-modbus-calc/',
+  base: '/4-20mA-Signal-Modbus-Offset-Calculator/',
   build: {
     outDir: 'dist',
     sourcemap: false,

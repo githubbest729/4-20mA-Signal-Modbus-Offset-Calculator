@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://example.com/signal-modbus-calc/sitemap.xml
+Sitemap: https://githubbest729.github.io/4-20mA-Signal-Modbus-Offset-Calculator/sitemap.xml
